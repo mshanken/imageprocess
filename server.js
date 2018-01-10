@@ -1,19 +1,10 @@
-var toobusy = require('toobusy-js'),
-    express = require('express'),
+var  express = require('express'),
     request = require('request'),
     transform = require('./lib/image-transformer'),
     config  = require('./config'),
     app     = express(),
     server;
 
-// middleware which blocks requests when we're too busy
-app.use(function(req, res, next) {
-  if (toobusy()) {
-    res.send(503, "I'm busy right now, cheers.");
-  } else {
-    next();
-  }
-});
 
 app.get(/d\/(.+)/, function(req, res) {
     var url = config.get('images') + req.params[0];
@@ -31,6 +22,4 @@ app.get(/d\/(.+)/, function(req, res) {
     });
 });
 
-app.listen(config.get('port'), function(){
-    console.log('server started on port ' + config.get('port'));
-});
+module.exports = app;

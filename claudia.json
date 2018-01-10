@@ -1,0 +1,10 @@
+{
+  "lambda": {
+    "role": "imageprocess-executor",
+    "name": "imageprocess",
+    "region": "us-east-1"
+  },
+  "api": {
+    "id": "l9np8k01ie"
+  }
+}
