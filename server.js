@@ -9,7 +9,7 @@ var toobusy = require('toobusy-js'),
 // middleware which blocks requests when we're too busy
 app.use(function(req, res, next) {
   if (toobusy()) {
-    res.send(503, "I'm busy right now, cheers.");
+    res.send(503, "The server is busy right now, please try your request again.");
   } else {
     next();
   }
@@ -27,7 +27,7 @@ app.get(/d\/(.+)/, function(req, res) {
     )
     .on('response', function(image_stream) {
         transform(image_stream, req.query)
-        .pipe(res);
+        .pipe(res.set('Cache-Control', 'public, s-maxage=604800'));
     });
 });
 
