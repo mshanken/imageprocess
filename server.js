@@ -4,6 +4,8 @@ var toobusy = require('toobusy-js'),
     transform = require('./lib/image-transformer'),
     config  = require('./config'),
     app     = express(),
+    mw_router = express.Router(),
+    router = express.Router(),
     server;
 
 // middleware which blocks requests when we're too busy
@@ -15,7 +17,8 @@ app.use(function(req, res, next) {
   }
 });
 
-app.get(/d\/(.+)/, function(req, res) {
+router.get(/\/(.+)/, function(req, res) {
+    console.log (req.path);
     var url = config.get('images') + req.params[0];
     request(
         { uri: url }
@@ -31,11 +34,11 @@ app.get(/d\/(.+)/, function(req, res) {
     });
 });
 
-app.get(/m\/(.+)/, function(req, res) {
+mw_router.get(/\/(.+)/, function(req, res) {
     var path = encodeURI(req.params[0]);
-    var url = config.get('mw_images') + path;
+    var mwurl = config.get('mw_images') + path;
     request(
-        { uri: url }
+        { uri: mwurl }
         , function (error, response, body) {
             if(response.statusCode !== 200) {
                 res.status(response.statusCode).send('file-not-found');
@@ -47,6 +50,9 @@ app.get(/m\/(.+)/, function(req, res) {
         .pipe(res.set('Cache-Control', 'public, s-maxage=31556952'));
     });
 });
+
+app.use('/mw', mw_router);
+app.use('/d', router);
 
 app.listen(config.get('port'), function(){
     console.log('server started on port ' + config.get('port'));
