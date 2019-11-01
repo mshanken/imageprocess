@@ -4,6 +4,7 @@ var toobusy = require('toobusy-js'),
     transform = require('./lib/image-transformer'),
     config  = require('./config'),
     app     = express(),
+    mw_router = express.Router(),
     router = express.Router(),
     server;
 
@@ -16,7 +17,8 @@ app.use(function(req, res, next) {
   }
 });
 
-app.get(/d\/(.+)/, function(req, res) {
+router.get(/\/(.+)/, function(req, res) {
+    console.log (req.path);
     var url = config.get('images') + req.params[0];
     request(
         { uri: url }
@@ -32,7 +34,7 @@ app.get(/d\/(.+)/, function(req, res) {
     });
 });
 
-app.get(/mw\/(.+)/, function(req, res) {
+mw_router.get(/\/(.+)/, function(req, res) {
     var path = encodeURI(req.params[0]);
     var mwurl = config.get('mw_images') + path;
     request(
@@ -48,6 +50,9 @@ app.get(/mw\/(.+)/, function(req, res) {
         .pipe(res.set('Cache-Control', 'public, s-maxage=31556952'));
     });
 });
+
+app.use('/mw', mw_router);
+app.use('/d', router);
 
 app.listen(config.get('port'), function(){
     console.log('server started on port ' + config.get('port'));
