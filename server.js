@@ -27,7 +27,24 @@ app.get(/d\/(.+)/, function(req, res) {
     )
     .on('response', function(image_stream) {
         transform(image_stream, req.query)
-        .pipe(res.set('Cache-Control', 'public, s-maxage=604800'));
+        .pipe(res.set('Cache-Control', 'public, s-maxage=31556952'));
+    });
+});
+
+app.get(/m\/(.+)/, function(req, res) {
+    var path = encodeURI(req.params[0]);
+    var url = config.get('mw_images') + path;
+    request(
+        { uri: url }
+        , function (error, response, body) {
+            if(response.statusCode !== 200) {
+                res.status(response.statusCode).send('file-not-found');
+            }
+        }
+    )
+    .on('response', function(image_stream) {
+        transform(image_stream, req.query)
+        .pipe(res.set('Cache-Control', 'public, s-maxage=31556952'));
     });
 });
 
