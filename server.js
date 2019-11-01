@@ -22,7 +22,7 @@ app.get(/d\/(.+)/, function(req, res) {
         { uri: url }
         , function (error, response, body) {
             if(response.statusCode !== 200) {
-                res.status(response.statusCode).send(response);
+                res.status(response.statusCode).send('not-found');
             }
         }
     )
@@ -39,7 +39,7 @@ app.get(/mw\/(.+)/, function(req, res) {
         { uri: mwurl }
         , function (error, response, body) {
             if(response.statusCode !== 200) {
-                res.status(response.statusCode).send(response);
+                res.status(response.statusCode).send('file-not-found');
             }
         }
     )
