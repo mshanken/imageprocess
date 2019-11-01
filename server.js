@@ -4,6 +4,7 @@ var toobusy = require('toobusy-js'),
     transform = require('./lib/image-transformer'),
     config  = require('./config'),
     app     = express(),
+    router = express.Router(),
     server;
 
 // middleware which blocks requests when we're too busy
@@ -21,7 +22,7 @@ app.get(/d\/(.+)/, function(req, res) {
         { uri: url }
         , function (error, response, body) {
             if(response.statusCode !== 200) {
-                res.status(response.statusCode).send('not-found');
+                res.status(response.statusCode).send(response);
             }
         }
     )
@@ -31,14 +32,14 @@ app.get(/d\/(.+)/, function(req, res) {
     });
 });
 
-app.get(/m\/(.+)/, function(req, res) {
+app.get(/mw\/(.+)/, function(req, res) {
     var path = encodeURI(req.params[0]);
-    var url = config.get('mw_images') + path;
+    var mwurl = config.get('mw_images') + path;
     request(
-        { uri: url }
+        { uri: mwurl }
         , function (error, response, body) {
             if(response.statusCode !== 200) {
-                res.status(response.statusCode).send('file-not-found');
+                res.status(response.statusCode).send(response);
             }
         }
     )
