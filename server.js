@@ -30,7 +30,7 @@ router.get(/\/(.+)/, function(req, res) {
     )
     .on('response', function(image_stream) {
         transform(image_stream, req.query)
-        .pipe(res.set('Cache-Control', 'public, s-maxage=31556952'));
+        .pipe(res.set('Cache-Control', 'public, max_age=86400, s-maxage=31556952'));
     });
 });
 
@@ -47,7 +47,7 @@ mw_router.get(/\/(.+)/, function(req, res) {
     )
     .on('response', function(image_stream) {
         transform(image_stream, req.query)
-        .pipe(res.set('Cache-Control', 'public, s-maxage=31556952'));
+        .pipe(res.set('Cache-Control', 'public, max_age=86400, s-maxage=31556952'));
     });
 });
 
